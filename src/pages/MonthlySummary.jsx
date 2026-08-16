@@ -3,6 +3,8 @@ import { base44 } from "@/api/base44Client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MONTHS, getYearOptions, currentMonthYear } from "@/lib/dateOptions";
 import DepartmentSummaryTable from "@/components/summary/DepartmentSummaryTable";
+import { Button } from "@/components/ui/button";
+import { Printer } from "lucide-react";
 
 export default function MonthlySummary() {
   const cur = currentMonthYear();
@@ -30,7 +32,7 @@ export default function MonthlySummary() {
           <h1 className="text-2xl font-semibold text-slate-900">Monthly Summary</h1>
           <p className="text-sm text-slate-500 mt-1">Department-wise consumption and cost.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 print:hidden">
           <Select value={month} onValueChange={setMonth}>
             <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
             <SelectContent>{MONTHS.map((m) => <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>)}</SelectContent>
@@ -39,6 +41,10 @@ export default function MonthlySummary() {
             <SelectTrigger className="w-24"><SelectValue /></SelectTrigger>
             <SelectContent>{getYearOptions().map((y) => <SelectItem key={y} value={String(y)}>{y}</SelectItem>)}</SelectContent>
           </Select>
+          <Button variant="outline" onClick={() => window.print()}>
+            <Printer className="w-4 h-4 mr-2" />
+            Print
+          </Button>
         </div>
       </div>
       <DepartmentSummaryTable transfers={transfers} month={month} year={year} />
