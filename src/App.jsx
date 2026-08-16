@@ -13,6 +13,7 @@ import Purchases from '@/pages/Purchases';
 import Transfers from '@/pages/Transfers';
 import MonthlySummary from '@/pages/MonthlySummary';
 import StockTakePage from '@/pages/StockTake';
+import ImportData from '@/pages/ImportData';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -49,6 +50,7 @@ const AuthenticatedApp = () => {
         <Route path="/transfers" element={<Transfers />} />
         <Route path="/monthly-summary" element={<MonthlySummary />} />
         <Route path="/stock-take" element={<StockTakePage />} />
+        <Route path="/import" element={<ImportData />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

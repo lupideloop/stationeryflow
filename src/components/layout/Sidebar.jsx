@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Package, ShoppingCart, ArrowLeftRight, BarChart3, ClipboardCheck } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, ArrowLeftRight, BarChart3, ClipboardCheck, UploadCloud } from "lucide-react";
 
 const NAV_ITEMS = [
   { name: "Dashboard", path: "/", icon: LayoutDashboard },
@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { name: "Transfers", path: "/transfers", icon: ArrowLeftRight },
   { name: "Monthly Summary", path: "/monthly-summary", icon: BarChart3 },
   { name: "Stock Take", path: "/stock-take", icon: ClipboardCheck },
+  { name: "Import Data", path: "/import", icon: UploadCloud },
 ];
 
 export default function Sidebar() {
