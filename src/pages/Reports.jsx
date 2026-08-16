@@ -34,6 +34,7 @@ export default function Reports() {
     startDate: defaultStartDate(),
     endDate: defaultEndDate(),
     department: "all",
+    category: "all",
     item: "all",
   });
 
@@ -59,10 +60,14 @@ export default function Reports() {
       if (start && tDate && tDate < start) return false;
       if (end && tDate && tDate > end) return false;
       if (filters.department !== "all" && t.department !== filters.department) return false;
+      if (filters.category !== "all") {
+        const item = stockItems.find((i) => i.item_id === t.item_id);
+        if (!item || item.category !== filters.category) return false;
+      }
       if (filters.item !== "all" && t.item_id !== filters.item) return false;
       return true;
     });
-  }, [transfers, filters]);
+  }, [transfers, filters, stockItems]);
 
   if (loading) {
     return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-slate-300 border-t-slate-800 rounded-full animate-spin" /></div>;
@@ -79,6 +84,7 @@ export default function Reports() {
         startDate={filters.startDate}
         endDate={filters.endDate}
         department={filters.department}
+        category={filters.category}
         item={filters.item}
         items={stockItems}
         onChange={handleFilterChange}
