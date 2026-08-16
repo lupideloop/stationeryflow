@@ -1,0 +1,44 @@
+{
+  "name": "Low Stock Alert",
+  "description": "Sends an email alert to admins when a stock item drops to or below its minimum stock level",
+  "trigger": {
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "StockItem",
+      "events": [
+        "create",
+        "update"
+      ]
+    },
+    "condition": "${ .trigger.data.status == \"Low Stock\" and .trigger.old_data.status != \"Low Stock\" }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "low_stock_alert",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "send_alert": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "sendLowStockAlert",
+            "args": {
+              "item_id": "${ .trigger.data.item_id }",
+              "details": "${ .trigger.data.details }",
+              "stock_level": "${ .trigger.data.stock_level }",
+              "minimum_stock_level": "${ .trigger.data.minimum_stock_level }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Send low stock email",
+            "description": "Notify admins"
+          }
+        }
+      }
+    ]
+  }
+}
