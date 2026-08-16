@@ -1,0 +1,81 @@
+{
+  "name": "StockItem",
+  "type": "object",
+  "properties": {
+    "item_id": {
+      "type": "string",
+      "description": "Unique item code"
+    },
+    "details": {
+      "type": "string",
+      "description": "Item description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Archive Boxes",
+        "Batteries",
+        "Binding Covers",
+        "Carbon Paper",
+        "Cartridges",
+        "Cash Register Rolls",
+        "Clipboard",
+        "Clips/Paperclips",
+        "Desktop Items",
+        "Diary",
+        "Dividers",
+        "Envelopes",
+        "Files",
+        "Folders",
+        "Labels",
+        "Lamination Pouches",
+        "Measuring Tape",
+        "Memory Drives",
+        "Notebooks",
+        "Office Tools",
+        "Other",
+        "Paper",
+        "Staples",
+        "Tape",
+        "Writing Utensils"
+      ]
+    },
+    "qty_in": {
+      "type": "number",
+      "default": 0
+    },
+    "qty_out": {
+      "type": "number",
+      "default": 0
+    },
+    "stock_level": {
+      "type": "number",
+      "default": 0
+    },
+    "unit_cost": {
+      "type": "number",
+      "default": 0
+    },
+    "total_value": {
+      "type": "number",
+      "default": 0
+    },
+    "minimum_stock_level": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "Low Stock"
+      ],
+      "default": "OK"
+    }
+  },
+  "required": [
+    "item_id",
+    "details",
+    "category"
+  ]
+}

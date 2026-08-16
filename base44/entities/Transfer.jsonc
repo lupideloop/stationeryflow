@@ -1,0 +1,48 @@
+{
+  "name": "Transfer",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "item_id": {
+      "type": "string"
+    },
+    "details": {
+      "type": "string"
+    },
+    "quantity_issued": {
+      "type": "number"
+    },
+    "department": {
+      "type": "string",
+      "enum": [
+        "Administration",
+        "Finance",
+        "Human Resources",
+        "IT",
+        "Operations",
+        "Procurement",
+        "Sales & Marketing",
+        "Other"
+      ]
+    },
+    "unit_price": {
+      "type": "number"
+    },
+    "total_cost": {
+      "type": "number"
+    },
+    "month_year": {
+      "type": "string",
+      "description": "Format YYYY-MM"
+    }
+  },
+  "required": [
+    "date",
+    "item_id",
+    "quantity_issued",
+    "department"
+  ]
+}

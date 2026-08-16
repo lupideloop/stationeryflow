@@ -1,0 +1,31 @@
+{
+  "name": "Purchase",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "item_id": {
+      "type": "string"
+    },
+    "details": {
+      "type": "string"
+    },
+    "quantity_purchased": {
+      "type": "number"
+    },
+    "unit_price": {
+      "type": "number"
+    },
+    "line_total": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "date",
+    "item_id",
+    "quantity_purchased",
+    "unit_price"
+  ]
+}

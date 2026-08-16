@@ -6,6 +6,13 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
+import AppLayout from '@/components/layout/AppLayout';
+import Dashboard from '@/pages/Dashboard';
+import MasterStock from '@/pages/MasterStock';
+import Purchases from '@/pages/Purchases';
+import Transfers from '@/pages/Transfers';
+import MonthlySummary from '@/pages/MonthlySummary';
+import StockTakePage from '@/pages/StockTake';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -35,6 +42,14 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       {/* Add your page Route elements here */}
+      <Route element={<AppLayout />}>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/master-stock" element={<MasterStock />} />
+        <Route path="/purchases" element={<Purchases />} />
+        <Route path="/transfers" element={<Transfers />} />
+        <Route path="/monthly-summary" element={<MonthlySummary />} />
+        <Route path="/stock-take" element={<StockTakePage />} />
+      </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

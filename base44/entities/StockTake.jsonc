@@ -1,0 +1,37 @@
+{
+  "name": "StockTake",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "Item ID"
+    },
+    "item_description": {
+      "type": "string"
+    },
+    "stock_on_record": {
+      "type": "number",
+      "default": 0
+    },
+    "stock_found": {
+      "type": "number",
+      "default": 0
+    },
+    "last_snapshot": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "checked": {
+      "type": "boolean",
+      "default": false
+    },
+    "month_year": {
+      "type": "string",
+      "description": "Format YYYY-MM"
+    }
+  },
+  "required": [
+    "code",
+    "month_year"
+  ]
+}
