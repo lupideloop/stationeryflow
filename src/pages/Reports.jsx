@@ -26,6 +26,7 @@ export default function Reports() {
     startDate: defaultStartDate(),
     endDate: defaultEndDate(),
     department: "all",
+    item: "all",
   });
 
   const load = useCallback(async () => {
@@ -47,6 +48,7 @@ export default function Reports() {
       if (filters.startDate && t.date < filters.startDate) return false;
       if (filters.endDate && t.date > filters.endDate) return false;
       if (filters.department !== "all" && t.department !== filters.department) return false;
+      if (filters.item !== "all" && t.item_id !== filters.item) return false;
       return true;
     });
   }, [transfers, filters]);
@@ -66,6 +68,8 @@ export default function Reports() {
         startDate={filters.startDate}
         endDate={filters.endDate}
         department={filters.department}
+        item={filters.item}
+        items={stockItems}
         onChange={handleFilterChange}
       />
 
