@@ -1,4 +1,4 @@
 export const DEPARTMENTS = [
-  "Administration", "Finance", "Human Resources", "IT", "Operations",
-  "Procurement", "Sales & Marketing", "Other"
+  "Exec Offices + Marketing", "FEC", "Bay Radio", "Accounts Dept",
+  "Cynergi", "CarPark", "Cinema", "TEN Ltd", "Other"
 ];

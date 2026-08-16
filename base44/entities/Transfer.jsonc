@@ -18,13 +18,14 @@
     "department": {
       "type": "string",
       "enum": [
-        "Administration",
-        "Finance",
-        "Human Resources",
-        "IT",
-        "Operations",
-        "Procurement",
-        "Sales & Marketing",
+        "Exec Offices + Marketing",
+        "FEC",
+        "Bay Radio",
+        "Accounts Dept",
+        "Cynergi",
+        "CarPark",
+        "Cinema",
+        "TEN Ltd",
         "Other"
       ]
     },
