@@ -18,6 +18,14 @@ function defaultEndDate() {
   return new Date().toISOString().slice(0, 10);
 }
 
+// Transfer.date is stored as "DD/MM/YYYY" — convert to a Date for comparison
+function parseTransferDate(dateStr) {
+  if (!dateStr) return null;
+  const [day, month, year] = dateStr.split("/");
+  if (!day || !month || !year) return null;
+  return new Date(`${year}-${month}-${day}`);
+}
+
 export default function Reports() {
   const [transfers, setTransfers] = useState([]);
   const [stockItems, setStockItems] = useState([]);
@@ -44,9 +52,12 @@ export default function Reports() {
   const handleFilterChange = (patch) => setFilters((prev) => ({ ...prev, ...patch }));
 
   const filteredTransfers = useMemo(() => {
+    const start = filters.startDate ? new Date(filters.startDate) : null;
+    const end = filters.endDate ? new Date(filters.endDate) : null;
     return transfers.filter((t) => {
-      if (filters.startDate && t.date < filters.startDate) return false;
-      if (filters.endDate && t.date > filters.endDate) return false;
+      const tDate = parseTransferDate(t.date);
+      if (start && tDate && tDate < start) return false;
+      if (end && tDate && tDate > end) return false;
       if (filters.department !== "all" && t.department !== filters.department) return false;
       if (filters.item !== "all" && t.item_id !== filters.item) return false;
       return true;
