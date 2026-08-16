@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import TransferForm from "@/components/transfers/TransferForm";
+import BulkTransferForm from "@/components/transfers/BulkTransferForm";
 import TransferTable from "@/components/transfers/TransferTable";
 
 export default function Transfers() {
@@ -34,7 +36,16 @@ export default function Transfers() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <Card className="shadow-sm border-slate-200 lg:col-span-1">
           <CardHeader><CardTitle className="text-base font-semibold">New Transfer</CardTitle></CardHeader>
-          <CardContent><TransferForm items={items} onSaved={load} /></CardContent>
+          <CardContent>
+            <Tabs defaultValue="single">
+              <TabsList className="w-full">
+                <TabsTrigger value="single" className="flex-1">Single</TabsTrigger>
+                <TabsTrigger value="bulk" className="flex-1">Bulk</TabsTrigger>
+              </TabsList>
+              <TabsContent value="single"><TransferForm items={items} onSaved={load} /></TabsContent>
+              <TabsContent value="bulk"><BulkTransferForm items={items} onSaved={load} /></TabsContent>
+            </Tabs>
+          </CardContent>
         </Card>
         <div className="lg:col-span-2">
           <TransferTable transfers={transfers} />

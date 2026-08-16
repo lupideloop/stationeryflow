@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import PurchaseForm from "@/components/purchases/PurchaseForm";
+import BulkPurchaseForm from "@/components/purchases/BulkPurchaseForm";
 import PurchaseTable from "@/components/purchases/PurchaseTable";
 
 export default function Purchases() {
@@ -34,7 +36,16 @@ export default function Purchases() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <Card className="shadow-sm border-slate-200 lg:col-span-1">
           <CardHeader><CardTitle className="text-base font-semibold">New Purchase</CardTitle></CardHeader>
-          <CardContent><PurchaseForm items={items} onSaved={load} /></CardContent>
+          <CardContent>
+            <Tabs defaultValue="single">
+              <TabsList className="w-full">
+                <TabsTrigger value="single" className="flex-1">Single</TabsTrigger>
+                <TabsTrigger value="bulk" className="flex-1">Bulk</TabsTrigger>
+              </TabsList>
+              <TabsContent value="single"><PurchaseForm items={items} onSaved={load} /></TabsContent>
+              <TabsContent value="bulk"><BulkPurchaseForm items={items} onSaved={load} /></TabsContent>
+            </Tabs>
+          </CardContent>
         </Card>
         <div className="lg:col-span-2">
           <PurchaseTable purchases={purchases} />
