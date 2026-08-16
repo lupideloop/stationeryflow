@@ -23,6 +23,8 @@ export default function MasterStock() {
     i.category.toLowerCase().includes(search.toLowerCase())
   );
 
+  const totalStockValue = items.reduce((sum, i) => sum + (Number(i.total_value) || 0), 0);
+
   if (loading) {
     return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-slate-300 border-t-slate-800 rounded-full animate-spin" /></div>;
   }
@@ -34,9 +36,15 @@ export default function MasterStock() {
           <h1 className="text-2xl font-semibold text-slate-900">Master Stock</h1>
           <p className="text-sm text-slate-500 mt-1">{items.length} items tracked</p>
         </div>
-        <div className="relative w-64">
-          <Search className="absolute left-2.5 top-2.5 w-4 h-4 text-slate-400" />
-          <Input placeholder="Search items..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-8" />
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <p className="text-xs text-slate-500">Total Stock Value</p>
+            <p className="text-lg font-semibold text-slate-900">€{totalStockValue.toFixed(2)}</p>
+          </div>
+          <div className="relative w-64">
+            <Search className="absolute left-2.5 top-2.5 w-4 h-4 text-slate-400" />
+            <Input placeholder="Search items..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-8" />
+          </div>
         </div>
       </div>
       <StockItemTable items={filtered} onChanged={load} />
