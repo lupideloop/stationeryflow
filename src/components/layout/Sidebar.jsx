@@ -8,8 +8,8 @@ const NAV_ITEMS = [
   { name: "Purchases", path: "/purchases", icon: ShoppingCart },
   { name: "Transfers", path: "/transfers", icon: ArrowLeftRight },
   { name: "Monthly Summary", path: "/monthly-summary", icon: BarChart3 },
-  { name: "Reports", path: "/reports", icon: LineChart },
   { name: "Stock Take", path: "/stock-take", icon: ClipboardCheck },
+  { name: "Reports", path: "/reports", icon: LineChart },
   { name: "Import Data", path: "/import", icon: UploadCloud },
   { name: "Connect AI", path: "/connect", icon: Bot },
 ];
