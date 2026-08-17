@@ -18,17 +18,17 @@ export default function TopConsumedChart({ transfers, items }) {
   }, [transfers, items]);
 
   if (data.length === 0) {
-    return <p className="text-sm text-slate-400 py-10 text-center">No consumption recorded for this selection.</p>;
+    return <p className="text-sm text-muted-foreground py-10 text-center">No consumption recorded for this selection.</p>;
   }
 
   return (
     <ResponsiveContainer width="100%" height={360}>
       <BarChart data={data} layout="vertical" margin={{ left: 20, right: 20 }}>
-        <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-        <XAxis type="number" tickFormatter={(v) => `€${v}`} />
-        <YAxis type="category" dataKey="name" width={160} tick={{ fontSize: 12 }} />
+        <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="hsl(var(--border))" />
+        <XAxis type="number" tickFormatter={(v) => `€${v}`} tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} />
+        <YAxis type="category" dataKey="name" width={160} tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} />
         <Tooltip formatter={(v) => [`€${v}`, "Total Cost"]} />
-        <Bar dataKey="cost" fill="#0f172a" radius={[0, 4, 4, 0]} />
+        <Bar dataKey="cost" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );

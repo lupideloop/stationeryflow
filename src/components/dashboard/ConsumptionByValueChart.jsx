@@ -16,7 +16,7 @@ export default function ConsumptionByValueChart({ transfers }) {
   }, [transfers, year]);
 
   return (
-    <Card className="shadow-sm border-slate-200">
+    <Card className="shadow-sm">
       <CardHeader className="flex flex-row items-center justify-between pb-3">
         <CardTitle className="text-base font-semibold">Consumption by Value</CardTitle>
         <Select value={year} onValueChange={setYear}>
@@ -27,11 +27,11 @@ export default function ConsumptionByValueChart({ transfers }) {
       <CardContent>
         <ResponsiveContainer width="100%" height={260}>
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eef0f3" />
-            <XAxis dataKey="month" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+            <XAxis dataKey="month" tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
             <Tooltip formatter={(v) => [`€${v}`, "Value"]} />
-            <Bar dataKey="value" fill="#1e293b" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="value" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

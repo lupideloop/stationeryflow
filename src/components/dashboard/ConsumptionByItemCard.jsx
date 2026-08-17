@@ -23,7 +23,7 @@ export default function ConsumptionByItemCard({ transfers, items }) {
   }, [transfers, items, month, year]);
 
   return (
-    <Card className="shadow-sm border-slate-200">
+    <Card className="shadow-sm">
       <CardHeader className="flex flex-row items-center justify-between pb-3">
         <CardTitle className="text-base font-semibold">Consumption by Item</CardTitle>
         <div className="flex gap-2">
@@ -39,18 +39,18 @@ export default function ConsumptionByItemCard({ transfers, items }) {
       </CardHeader>
       <CardContent>
         {rows.length === 0 ? (
-          <p className="text-sm text-slate-400 py-6 text-center">No consumption recorded for this period.</p>
+          <p className="text-sm text-muted-foreground py-6 text-center">No consumption recorded for this period.</p>
         ) : (
           <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
             {rows.map((r) => (
-              <div key={r.item_id} className="flex items-center justify-between text-sm py-1.5 border-b border-slate-100 last:border-0">
+              <div key={r.item_id} className="flex items-center justify-between text-sm py-1.5 border-b border-border last:border-0">
                 <div>
-                  <p className="font-medium text-slate-800">{r.details}</p>
-                  <p className="text-xs text-slate-400">{r.item_id}</p>
+                  <p className="font-medium text-foreground">{r.details}</p>
+                  <p className="text-xs text-muted-foreground">{r.item_id}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium text-slate-800">{r.qty} units</p>
-                  <p className="text-xs text-slate-400">€{r.value.toFixed(2)}</p>
+                  <p className="font-medium text-foreground">{r.qty} units</p>
+                  <p className="text-xs text-muted-foreground">€{r.value.toFixed(2)}</p>
                 </div>
               </div>
             ))}
