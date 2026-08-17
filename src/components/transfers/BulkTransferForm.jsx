@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { computeDerivedFields } from "@/lib/stockCalculations";
+import { toDisplayDate } from "@/lib/dateFormat";
 import { useToast } from "@/components/ui/use-toast";
 import BulkTransferRow from "./BulkTransferRow";
 
@@ -36,7 +37,7 @@ export default function BulkTransferForm({ items, onSaved }) {
       const unitPrice = Number(item.unit_cost) || 0;
       const monthYear = row.date.slice(0, 7);
       await base44.entities.Transfer.create({
-        date: row.date,
+        date: toDisplayDate(row.date),
         item_id: row.item_id,
         details: item.details,
         quantity_issued: qty,

@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DEPARTMENTS } from "@/lib/departments";
 import { computeDerivedFields } from "@/lib/stockCalculations";
+import { toDisplayDate } from "@/lib/dateFormat";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function TransferForm({ items, onSaved }) {
@@ -27,7 +28,7 @@ export default function TransferForm({ items, onSaved }) {
     setSaving(true);
     const monthYear = form.date.slice(0, 7);
     await base44.entities.Transfer.create({
-      date: form.date,
+      date: toDisplayDate(form.date),
       item_id: form.item_id,
       details: selectedItem.details,
       quantity_issued: qty,

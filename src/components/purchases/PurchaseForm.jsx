@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { computeDerivedFields } from "@/lib/stockCalculations";
+import { toDisplayDate } from "@/lib/dateFormat";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function PurchaseForm({ items, onSaved }) {
@@ -25,7 +26,7 @@ export default function PurchaseForm({ items, onSaved }) {
     setSaving(true);
     const item = items.find((i) => i.item_id === form.item_id);
     await base44.entities.Purchase.create({
-      date: form.date,
+      date: toDisplayDate(form.date),
       item_id: form.item_id,
       details: item.details,
       quantity_purchased: qty,

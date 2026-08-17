@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { computeDerivedFields } from "@/lib/stockCalculations";
+import { toDisplayDate } from "@/lib/dateFormat";
 import { useToast } from "@/components/ui/use-toast";
 import BulkPurchaseRow from "./BulkPurchaseRow";
 
@@ -35,7 +36,7 @@ export default function BulkPurchaseForm({ items, onSaved }) {
       const price = Number(row.unit_price);
       const item = itemState[row.item_id];
       await base44.entities.Purchase.create({
-        date: row.date,
+        date: toDisplayDate(row.date),
         item_id: row.item_id,
         details: item.details,
         quantity_purchased: qty,
