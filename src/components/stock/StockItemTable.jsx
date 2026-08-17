@@ -26,8 +26,10 @@ export default function StockItemTable({ items, onChanged }) {
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
-          {items.map((item) => (
-            <tr key={item.id} className="hover:bg-slate-50/50">
+          {items.map((item) => {
+            const isLow = Number(item.stock_level) <= Number(item.minimum_stock_level);
+            return (
+            <tr key={item.id} className={isLow ? "bg-red-50 hover:bg-red-100/70" : "hover:bg-slate-50/50"}>
               <td className="px-4 py-3 font-medium text-slate-800">{item.item_id}</td>
               <td className="px-4 py-3 text-slate-700">{item.details}</td>
               <td className="px-4 py-3 text-slate-500">{item.category}</td>
@@ -48,7 +50,8 @@ export default function StockItemTable({ items, onChanged }) {
                 </Button>
               </td>
             </tr>
-          ))}
+            );
+          })}
           {items.length === 0 && (
             <tr><td colSpan={11} className="px-4 py-8 text-center text-slate-400">No items yet.</td></tr>
           )}
