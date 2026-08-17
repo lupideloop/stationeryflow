@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Package, ShoppingCart, ArrowLeftRight, BarChart3, ClipboardCheck, UploadCloud, Bot, LineChart, Settings, Inbox } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, ArrowLeftRight, BarChart3, ClipboardCheck, UploadCloud, Bot, LineChart, Settings, Inbox, Sparkles } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 export const NAV_ITEMS = [
@@ -12,6 +12,7 @@ export const NAV_ITEMS = [
   { name: "Monthly Summary", path: "/monthly-summary", icon: BarChart3 },
   { name: "Stock Take", path: "/stock-take", icon: ClipboardCheck },
   { name: "Reports", path: "/reports", icon: LineChart },
+  { name: "Elara", path: "/elara", icon: Sparkles },
   { name: "Import Data", path: "/import", icon: UploadCloud },
   { name: "Connect AI", path: "/connect", icon: Bot },
   { name: "Settings", path: "/settings", icon: Settings },

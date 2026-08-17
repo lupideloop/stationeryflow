@@ -24,6 +24,7 @@ import Connect from '@/pages/Connect';
 import Reports from '@/pages/Reports';
 import Configuration from '@/pages/Configuration';
 import Requisitions from '@/pages/Requisitions';
+import Elara from '@/pages/Elara';
 import RequisitionForm from '@/pages/RequisitionForm';
 // Add page imports here
 
@@ -71,6 +72,7 @@ const AuthenticatedApp = () => {
         <Route path="/reports" element={<Reports />} />
         <Route path="/configuration" element={<Configuration />} />
         <Route path="/requisitions" element={<Requisitions />} />
+        <Route path="/elara" element={<Elara />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
