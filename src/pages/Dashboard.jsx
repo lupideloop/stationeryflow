@@ -26,14 +26,14 @@ export default function Dashboard() {
   const lowStock = items.filter((i) => i.status === "Low Stock");
 
   if (loading) {
-    return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-slate-300 border-t-slate-800 rounded-full animate-spin" /></div>;
+    return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-muted border-t-primary rounded-full animate-spin" /></div>;
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Dashboard</h1>
-        <p className="text-sm text-slate-500 mt-1">Overview of consumption, value and stock health.</p>
+        <h1 className="text-2xl font-semibold text-foreground">Dashboard</h1>
+        <p className="text-sm text-muted-foreground mt-1">Overview of consumption, value and stock health.</p>
       </div>
 
       {lowStock.length > 0 && (
@@ -51,7 +51,7 @@ export default function Dashboard() {
         <ConsumptionByValueChart transfers={transfers} />
       </div>
 
-      <Card className="shadow-sm border-slate-200 max-w-xl">
+      <Card className="shadow-sm max-w-xl">
         <CardHeader>
           <CardTitle className="text-base font-semibold">Register New Item</CardTitle>
         </CardHeader>
