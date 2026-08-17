@@ -17,7 +17,7 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   return (
-    <aside className="hidden md:flex md:flex-col w-64 bg-sidebar text-sidebar-foreground min-h-screen shrink-0 print:hidden">
+    <aside className="hidden md:flex md:flex-col w-64 bg-sidebar sidebar-gradient text-sidebar-foreground min-h-screen shrink-0 print:hidden">
       <div className="px-6 py-8">
         <h1 className="text-lg font-semibold tracking-tight text-sidebar-accent-foreground">Stationery Inventory</h1>
         <p className="text-xs text-sidebar-foreground/60 mt-1">Pro Edition</p>

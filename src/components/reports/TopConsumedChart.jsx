@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { getChartColor } from "@/lib/chartColors";
 
 export default function TopConsumedChart({ transfers, items }) {
   const data = useMemo(() => {
@@ -28,7 +29,11 @@ export default function TopConsumedChart({ transfers, items }) {
         <XAxis type="number" tickFormatter={(v) => `€${v}`} tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} />
         <YAxis type="category" dataKey="name" width={160} tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} />
         <Tooltip formatter={(v) => [`€${v}`, "Total Cost"]} />
-        <Bar dataKey="cost" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
+        <Bar dataKey="cost" radius={[0, 4, 4, 0]}>
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={getChartColor(index)} />
+          ))}
+        </Bar>
       </BarChart>
     </ResponsiveContainer>
   );

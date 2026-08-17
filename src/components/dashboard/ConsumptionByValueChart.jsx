@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { BarChart, Bar, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { MONTHS, getYearOptions, currentMonthYear } from "@/lib/dateOptions";
+import { getChartColor } from "@/lib/chartColors";
 
 export default function ConsumptionByValueChart({ transfers }) {
   const [year, setYear] = useState(currentMonthYear().year);
@@ -16,7 +17,7 @@ export default function ConsumptionByValueChart({ transfers }) {
   }, [transfers, year]);
 
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-sm stat-card-2">
       <CardHeader className="flex flex-row items-center justify-between pb-3">
         <CardTitle className="text-base font-semibold">Consumption by Value</CardTitle>
         <Select value={year} onValueChange={setYear}>
@@ -31,7 +32,11 @@ export default function ConsumptionByValueChart({ transfers }) {
             <XAxis dataKey="month" tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
             <Tooltip formatter={(v) => [`€${v}`, "Value"]} />
-            <Bar dataKey="value" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={getChartColor(index)} />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

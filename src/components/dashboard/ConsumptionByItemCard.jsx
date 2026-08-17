@@ -23,7 +23,7 @@ export default function ConsumptionByItemCard({ transfers, items }) {
   }, [transfers, items, month, year]);
 
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-sm stat-card-3">
       <CardHeader className="flex flex-row items-center justify-between pb-3">
         <CardTitle className="text-base font-semibold">Consumption by Item</CardTitle>
         <div className="flex gap-2">

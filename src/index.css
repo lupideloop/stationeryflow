@@ -23,11 +23,11 @@
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
     --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --chart-1: 0 0% 9%;
+    --chart-2: 0 0% 9%;
+    --chart-3: 0 0% 9%;
+    --chart-4: 0 0% 9%;
+    --chart-5: 0 0% 9%;
     --radius: 0.5rem;
     --font-heading: ui-sans-serif, system-ui, sans-serif;
     --font-body: ui-sans-serif, system-ui, sans-serif;
@@ -162,4 +162,24 @@
   --chart-3: 262 83% 58%;
   --chart-4: 48 96% 53%;
   --chart-5: 199 89% 48%;
+  --chart-6: 340 82% 60%;
+  --chart-7: 160 72% 48%;
+  --chart-8: 30 90% 56%;
+  --chart-9: 210 78% 55%;
+  --chart-10: 280 65% 60%;
+  --chart-11: 120 55% 50%;
+  --chart-12: 10 85% 58%;
 }
+
+.theme-vibrant .sidebar-gradient {
+  background: linear-gradient(180deg, hsl(280 40% 15%) 0%, hsl(324 71% 20%) 100%);
+}
+
+.theme-vibrant .card-accent {
+  border-top: 3px solid hsl(var(--chart-1));
+}
+
+.theme-vibrant .stat-card-1 { border-top: 3px solid hsl(var(--chart-1)); }
+.theme-vibrant .stat-card-2 { border-top: 3px solid hsl(var(--chart-2)); }
+.theme-vibrant .stat-card-3 { border-top: 3px solid hsl(var(--chart-3)); }
+.theme-vibrant .stat-card-4 { border-top: 3px solid hsl(var(--chart-4)); }

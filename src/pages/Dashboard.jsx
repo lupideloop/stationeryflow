@@ -37,7 +37,7 @@ export default function Dashboard() {
       </div>
 
       {lowStock.length > 0 && (
-        <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-lg p-4">
+        <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-lg p-4 stat-card-1">
           <AlertTriangle className="w-5 h-5 text-amber-500 mt-0.5" />
           <div>
             <p className="text-sm font-medium text-amber-800">{lowStock.length} item{lowStock.length > 1 ? "s" : ""} at or below minimum stock level</p>
