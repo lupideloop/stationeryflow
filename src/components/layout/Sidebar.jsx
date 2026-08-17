@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { LayoutDashboard, Package, ShoppingCart, ArrowLeftRight, BarChart3, ClipboardCheck, UploadCloud, Bot, LineChart, Settings, Inbox } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 
 const NAV_ITEMS = [
   { name: "Dashboard", path: "/", icon: LayoutDashboard },
@@ -17,6 +18,21 @@ const NAV_ITEMS = [
 ];
 
 export default function Sidebar() {
+  const [pendingCount, setPendingCount] = useState(0);
+
+  useEffect(() => {
+    const loadPendingCount = async () => {
+      const pending = await base44.entities.Requisition.filter({ status: "Pending" });
+      setPendingCount(pending.length);
+    };
+    loadPendingCount();
+
+    const unsubscribe = base44.entities.Requisition.subscribe(() => {
+      loadPendingCount();
+    });
+    return unsubscribe;
+  }, []);
+
   return (
     <aside className="hidden md:flex md:flex-col w-64 bg-sidebar sidebar-gradient text-sidebar-foreground min-h-screen shrink-0 print:hidden">
       <div className="px-6 py-8">
@@ -36,7 +52,12 @@ export default function Sidebar() {
             }
           >
             <item.icon className="w-4 h-4" />
-            {item.name}
+            <span className="flex-1">{item.name}</span>
+            {item.path === "/requisitions" && pendingCount > 0 && (
+              <span className="bg-red-500 text-white text-xs font-semibold rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center">
+                {pendingCount}
+              </span>
+            )}
           </NavLink>
         ))}
       </nav>
