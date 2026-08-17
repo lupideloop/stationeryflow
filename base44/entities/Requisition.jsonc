@@ -12,6 +12,10 @@
     "department": {
       "type": "string"
     },
+    "owner_user_id": {
+      "type": "string",
+      "description": "The stock owner this requisition belongs to"
+    },
     "status": {
       "type": "string",
       "enum": [
@@ -48,16 +52,16 @@
   ],
   "rls": {
     "read": {
-      "created_by_id": "{{user.id}}"
+      "data.owner_user_id": "{{user.id}}"
     },
     "create": {
-      "created_by_id": "{{user.id}}"
+      "data.owner_user_id": "{{user.id}}"
     },
     "update": {
-      "created_by_id": "{{user.id}}"
+      "data.owner_user_id": "{{user.id}}"
     },
     "delete": {
-      "created_by_id": "{{user.id}}"
+      "data.owner_user_id": "{{user.id}}"
     }
   }
 }
