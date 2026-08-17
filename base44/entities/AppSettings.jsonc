@@ -1,0 +1,10 @@
+{
+  "name": "AppSettings",
+  "type": "object",
+  "properties": {
+    "notification_email": {
+      "type": "string",
+      "description": "Email address that receives low stock and system notifications"
+    }
+  }
+}

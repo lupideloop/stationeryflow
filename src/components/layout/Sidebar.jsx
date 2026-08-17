@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Package, ShoppingCart, ArrowLeftRight, BarChart3, ClipboardCheck, UploadCloud, Bot, LineChart } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, ArrowLeftRight, BarChart3, ClipboardCheck, UploadCloud, Bot, LineChart, Settings } from "lucide-react";
 
 const NAV_ITEMS = [
   { name: "Dashboard", path: "/", icon: LayoutDashboard },
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { name: "Reports", path: "/reports", icon: LineChart },
   { name: "Import Data", path: "/import", icon: UploadCloud },
   { name: "Connect AI", path: "/connect", icon: Bot },
+  { name: "Settings", path: "/settings", icon: Settings },
 ];
 
 export default function Sidebar() {
