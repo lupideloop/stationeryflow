@@ -1,0 +1,63 @@
+{
+  "name": "Requisition",
+  "type": "object",
+  "properties": {
+    "request_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "requester_name": {
+      "type": "string"
+    },
+    "department": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Pending",
+        "Reviewed"
+      ],
+      "default": "Pending"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item_name": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "matched_item_id": {
+            "type": "string"
+          },
+          "stock_level": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "request_date",
+    "requester_name",
+    "department"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

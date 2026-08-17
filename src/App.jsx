@@ -22,6 +22,9 @@ import StockTakePage from '@/pages/StockTake';
 import ImportData from '@/pages/ImportData';
 import Connect from '@/pages/Connect';
 import Reports from '@/pages/Reports';
+import Configuration from '@/pages/Configuration';
+import Requisitions from '@/pages/Requisitions';
+import RequisitionForm from '@/pages/RequisitionForm';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -55,6 +58,7 @@ const AuthenticatedApp = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/requisition" element={<RequisitionForm />} />
       <Route element={<AppLayout />}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/master-stock" element={<MasterStock />} />
@@ -65,6 +69,8 @@ const AuthenticatedApp = () => {
         <Route path="/import" element={<ImportData />} />
         <Route path="/connect" element={<Connect />} />
         <Route path="/reports" element={<Reports />} />
+        <Route path="/configuration" element={<Configuration />} />
+        <Route path="/requisitions" element={<Requisitions />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />

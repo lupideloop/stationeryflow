@@ -1,12 +1,13 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Package, ShoppingCart, ArrowLeftRight, BarChart3, ClipboardCheck, UploadCloud, Bot, LineChart, Settings } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, ArrowLeftRight, BarChart3, ClipboardCheck, UploadCloud, Bot, LineChart, Settings, Inbox } from "lucide-react";
 
 const NAV_ITEMS = [
   { name: "Dashboard", path: "/", icon: LayoutDashboard },
   { name: "Master Stock", path: "/master-stock", icon: Package },
   { name: "Purchases", path: "/purchases", icon: ShoppingCart },
   { name: "Transfers", path: "/transfers", icon: ArrowLeftRight },
+  { name: "Requisitions", path: "/requisitions", icon: Inbox },
   { name: "Monthly Summary", path: "/monthly-summary", icon: BarChart3 },
   { name: "Stock Take", path: "/stock-take", icon: ClipboardCheck },
   { name: "Reports", path: "/reports", icon: LineChart },

@@ -1,0 +1,34 @@
+{
+  "name": "RequisitionLink",
+  "type": "object",
+  "properties": {
+    "department_name": {
+      "type": "string"
+    },
+    "token": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "department_name",
+    "token"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}
