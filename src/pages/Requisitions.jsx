@@ -1,27 +1,25 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { queryKeys } from "@/lib/queryKeys";
 
 export default function Requisitions() {
-  const [requisitions, setRequisitions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  const load = useCallback(async () => {
-    const data = await base44.entities.Requisition.list("-request_date", 200);
-    setRequisitions(data);
-    setLoading(false);
-  }, []);
+  const { data: requisitions = [], isLoading } = useQuery({
+    queryKey: queryKeys.requisitions,
+    queryFn: () => base44.entities.Requisition.list("-request_date", 200),
+  });
 
-  useEffect(() => { load(); }, [load]);
+  const toggleMutation = useMutation({
+    mutationFn: (req) => base44.entities.Requisition.update(req.id, { status: req.status === "Pending" ? "Reviewed" : "Pending" }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.requisitions }),
+  });
 
-  const toggleStatus = async (req) => {
-    await base44.entities.Requisition.update(req.id, { status: req.status === "Pending" ? "Reviewed" : "Pending" });
-    load();
-  };
-
-  if (loading) {
+  if (isLoading) {
     return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-slate-300 border-t-slate-800 rounded-full animate-spin" /></div>;
   }
 
@@ -46,7 +44,7 @@ export default function Requisitions() {
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant={req.status === "Reviewed" ? "secondary" : "default"}>{req.status}</Badge>
-                <Button size="sm" variant="outline" onClick={() => toggleStatus(req)}>
+                <Button size="sm" variant="outline" onClick={() => toggleMutation.mutate(req)}>
                   Mark {req.status === "Pending" ? "Reviewed" : "Pending"}
                 </Button>
               </div>

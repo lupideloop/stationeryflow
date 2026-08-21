@@ -1,31 +1,38 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useMemo, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
 import StockItemTable from "@/components/stock/StockItemTable";
+import Pagination from "@/components/Pagination";
+import { useDebounce } from "@/hooks/useDebounce";
+import { usePagination } from "@/hooks/usePagination";
+import { queryKeys } from "@/lib/queryKeys";
 import { Search } from "lucide-react";
 
 export default function MasterStock() {
-  const [items, setItems] = useState([]);
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
+  const debouncedSearch = useDebounce(search, 250);
 
-  const load = useCallback(async () => {
-    const data = await base44.entities.StockItem.list("item_id", 1000);
-    setItems(data);
-    setLoading(false);
-  }, []);
+  const { data: items = [], isLoading } = useQuery({
+    queryKey: queryKeys.stockItems,
+    queryFn: () => base44.entities.StockItem.list("item_id", 1000),
+  });
 
-  useEffect(() => { load(); }, [load]);
+  const filtered = useMemo(() => {
+    const q = debouncedSearch.toLowerCase();
+    return items.filter((i) =>
+      i.item_id.toLowerCase().includes(q) ||
+      i.details.toLowerCase().includes(q) ||
+      i.category.toLowerCase().includes(q)
+    );
+  }, [items, debouncedSearch]);
 
-  const filtered = items.filter((i) =>
-    i.item_id.toLowerCase().includes(search.toLowerCase()) ||
-    i.details.toLowerCase().includes(search.toLowerCase()) ||
-    i.category.toLowerCase().includes(search.toLowerCase())
-  );
+  const { page, totalPages, setPage, paged } = usePagination(filtered, 50);
 
   const totalStockValue = items.reduce((sum, i) => sum + (Number(i.total_value) || 0), 0);
 
-  if (loading) {
+  if (isLoading) {
     return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-slate-300 border-t-slate-800 rounded-full animate-spin" /></div>;
   }
 
@@ -47,7 +54,8 @@ export default function MasterStock() {
           </div>
         </div>
       </div>
-      <StockItemTable items={filtered} onChanged={load} />
+      <StockItemTable items={paged} onChanged={() => queryClient.invalidateQueries({ queryKey: queryKeys.stockItems })} />
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }

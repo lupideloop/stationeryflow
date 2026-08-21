@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +9,8 @@ import ItemConsumptionReport from "@/components/reports/ItemConsumptionReport";
 import FrequencyReport from "@/components/reports/FrequencyReport";
 import TopConsumedChart from "@/components/reports/TopConsumedChart";
 import LowStockReport from "@/components/reports/LowStockReport";
+import ChartErrorBoundary from "@/components/ChartErrorBoundary";
+import { queryKeys } from "@/lib/queryKeys";
 
 function defaultStartDate() {
   const d = new Date();
@@ -27,9 +30,6 @@ function parseTransferDate(dateStr) {
 }
 
 export default function Reports() {
-  const [transfers, setTransfers] = useState([]);
-  const [stockItems, setStockItems] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     startDate: defaultStartDate(),
     endDate: defaultEndDate(),
@@ -38,17 +38,16 @@ export default function Reports() {
     item: "all",
   });
 
-  const load = useCallback(async () => {
-    const [t, s] = await Promise.all([
-      base44.entities.Transfer.list("-date", 5000),
-      base44.entities.StockItem.list(),
-    ]);
-    setTransfers(t);
-    setStockItems(s);
-    setLoading(false);
-  }, []);
+  const { data: transfers = [], isLoading: transfersLoading } = useQuery({
+    queryKey: queryKeys.transfers,
+    queryFn: () => base44.entities.Transfer.list("-date", 5000),
+  });
+  const { data: stockItems = [], isLoading: itemsLoading } = useQuery({
+    queryKey: queryKeys.stockItems,
+    queryFn: () => base44.entities.StockItem.list("item_id", 1000),
+  });
 
-  useEffect(() => { load(); }, [load]);
+  const loading = transfersLoading || itemsLoading;
 
   const handleFilterChange = (patch) => setFilters((prev) => ({ ...prev, ...patch }));
 
@@ -123,7 +122,11 @@ export default function Reports() {
         <TabsContent value="top">
           <Card>
             <CardHeader><CardTitle className="text-base">Top 10 Items by Consumption Value</CardTitle></CardHeader>
-            <CardContent><TopConsumedChart transfers={filteredTransfers} items={stockItems} /></CardContent>
+            <CardContent>
+              <ChartErrorBoundary>
+                <TopConsumedChart transfers={filteredTransfers} items={stockItems} />
+              </ChartErrorBoundary>
+            </CardContent>
           </Card>
         </TabsContent>
 

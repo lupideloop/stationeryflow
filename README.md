@@ -1,17 +1,18 @@
-# Base44 Project
+# StationeryFlow
 
-Use this repository to run and edit the app locally, then publish changes back through Base44.
+An all-in-one inventory management system for tracking stationery stock, purchases, departmental transfers, and monthly stock takes — with automated low-stock alerts, consumption analytics, and a self-service requisition portal for departments.
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+## What it does
 
-## Prerequisites
+- **Master Stock** — a live register of every stock item, with quantity in/out, unit cost, total value and low-stock status computed automatically.
+- **Purchases & Transfers** — record incoming stock and outgoing departmental issues (single or bulk entry); stock levels and valuations update automatically.
+- **Monthly Summary & Reports** — department- and item-level consumption analytics, top-consumed items, and low-stock warnings.
+- **Stock Take** — start a monthly physical audit snapshot and reconcile found vs. recorded quantities.
+- **Requisitions** — admins generate a per-department link; department staff submit stock requests through a public form that looks up live stock levels, without needing an account.
+- **Elara** — an in-app AI assistant that answers questions about stock levels, purchase history, and transfer history in plain language.
+- **Configuration** — departments and stock categories are defined per account, so the app adapts to how your organization is structured.
 
-1. Clone the repository using the project's Git URL.
-2. Navigate to the project directory.
-3. Install dependencies: `npm install`.
-4. Install the Base44 CLI: `npm install -g base44@latest`.
-
-See the [Base44 CLI docs](https://docs.base44.com/developers/references/cli/get-started/overview) if you want to run Base44 commands directly.
+Data is isolated per account: each user (or admin) only sees the stock, purchases and transfers they own, enforced via row-level security on every core entity.
 
 ## Run Locally
 
@@ -23,21 +24,9 @@ base44 dev
 
 `base44 dev` starts the local Base44 development backend and, when this app is configured for it, also starts the frontend dev server for you. Use the frontend URL printed by the command.
 
-For example, when the Base44 project config includes a `serveCommand`, `base44 dev` can launch the frontend too:
+### Run Only The Frontend
 
-```json5
-{
-  "site": {
-    "serveCommand": "npm run dev"
-  }
-}
-```
-
-In a Base44 project this lives in `base44/config.jsonc`.
-
-## Run Only The Frontend
-
-If you only want to work on the frontend against the hosted Base44 backend, run:
+If you only want to work on the frontend against the hosted Base44 backend:
 
 ```bash
 npm run dev
@@ -45,20 +34,44 @@ npm run dev
 
 Open the local URL printed by Vite.
 
-## Use The Hosted Backend
+### Environment Variables
 
 For frontend-only development, create or update `.env.local` in the project root:
 
 ```bash
 VITE_BASE44_APP_ID=your_app_id
 VITE_BASE44_APP_BASE_URL=https://your-app.base44.app
+VITE_BASE44_FUNCTIONS_VERSION=your_functions_version   # optional
 ```
 
-`VITE_BASE44_APP_ID` identifies the Base44 app.
+- `VITE_BASE44_APP_ID` identifies the Base44 app.
+- `VITE_BASE44_APP_BASE_URL` tells the Base44 Vite plugin where to send local `/api` requests — point it at your deployed app URL to use the hosted backend from a local frontend.
+- `VITE_BASE44_FUNCTIONS_VERSION` pins a specific backend functions deployment (optional).
 
-`VITE_BASE44_APP_BASE_URL` tells the Base44 Vite plugin where to send local `/api` requests. Point it at your deployed Base44 app URL when you want the local frontend to use the hosted backend.
+When you use `base44 dev`, these values are injected for you, so `.env.local` is mainly needed for frontend-only workflows.
 
-When you use `base44 dev`, the command injects the local Base44 values for you, so `.env.local` is mainly needed for frontend-only workflows.
+## Data Model
+
+| Entity | Purpose |
+|---|---|
+| `StockItem` | Master record per item: category, qty in/out, stock level, unit cost, total value, minimum level, status. |
+| `Purchase` | An incoming stock transaction; increases the linked `StockItem`'s `qty_in` and updates its unit cost. |
+| `Transfer` | An outgoing issue to a department; increases the linked `StockItem`'s `qty_out`. |
+| `StockTake` | A monthly physical-audit snapshot per `StockItem`, comparing recorded vs. found quantity. |
+| `Requisition` | A department's stock request submitted through the public requisition form, with items matched against live `StockItem` records. |
+| `RequisitionLink` | A tokenized, per-department link used to access the public requisition form. |
+| `Department` / `Category` | Self-configured lists used across forms and reports. |
+| `AppSettings` | Per-account settings, e.g. the notification email for low-stock alerts. |
+
+## Where the backend config lives
+
+Base44 backend configuration (entities, functions, workflows, agents) lives under `base44/` in this repository:
+
+- `base44/entities/` — entity schemas and row-level security rules
+- `base44/functions/` — backend functions (Google Sheets import, requisition link generation/submission, low-stock alert email)
+- `base44/workflows/` — scheduled/triggered automations (e.g. the low-stock alert workflow)
+- `base44/agents/` — the Elara AI assistant configuration
+- `base44/config.jsonc` — project-level Base44 config
 
 ## Publish Your Changes
 

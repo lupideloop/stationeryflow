@@ -1,27 +1,34 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import PurchaseForm from "@/components/purchases/PurchaseForm";
 import BulkPurchaseForm from "@/components/purchases/BulkPurchaseForm";
 import PurchaseTable from "@/components/purchases/PurchaseTable";
+import Pagination from "@/components/Pagination";
+import { usePagination } from "@/hooks/usePagination";
+import { queryKeys } from "@/lib/queryKeys";
 
 export default function Purchases() {
-  const [items, setItems] = useState([]);
-  const [purchases, setPurchases] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  const load = useCallback(async () => {
-    const [i, p] = await Promise.all([
-      base44.entities.StockItem.list("item_id", 1000),
-      base44.entities.Purchase.list("-date", 1000),
-    ]);
-    setItems(i);
-    setPurchases(p);
-    setLoading(false);
-  }, []);
+  const { data: items = [], isLoading: itemsLoading } = useQuery({
+    queryKey: queryKeys.stockItems,
+    queryFn: () => base44.entities.StockItem.list("item_id", 1000),
+  });
+  const { data: purchases = [], isLoading: purchasesLoading } = useQuery({
+    queryKey: queryKeys.purchases,
+    queryFn: () => base44.entities.Purchase.list("-date", 1000),
+  });
 
-  useEffect(() => { load(); }, [load]);
+  const loading = itemsLoading || purchasesLoading;
+  const { page, totalPages, setPage, paged } = usePagination(purchases, 50);
+
+  const onSaved = () => {
+    queryClient.invalidateQueries({ queryKey: queryKeys.stockItems });
+    queryClient.invalidateQueries({ queryKey: queryKeys.purchases });
+  };
 
   if (loading) {
     return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-slate-300 border-t-slate-800 rounded-full animate-spin" /></div>;
@@ -42,13 +49,14 @@ export default function Purchases() {
                 <TabsTrigger value="single" className="flex-1">Single</TabsTrigger>
                 <TabsTrigger value="bulk" className="flex-1">Bulk</TabsTrigger>
               </TabsList>
-              <TabsContent value="single"><PurchaseForm items={items} onSaved={load} /></TabsContent>
-              <TabsContent value="bulk"><BulkPurchaseForm items={items} onSaved={load} /></TabsContent>
+              <TabsContent value="single"><PurchaseForm items={items} onSaved={onSaved} /></TabsContent>
+              <TabsContent value="bulk"><BulkPurchaseForm items={items} onSaved={onSaved} /></TabsContent>
             </Tabs>
           </CardContent>
         </Card>
-        <div className="lg:col-span-2">
-          <PurchaseTable purchases={purchases} />
+        <div className="lg:col-span-2 space-y-3">
+          <PurchaseTable purchases={paged} />
+          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
         </div>
       </div>
     </div>

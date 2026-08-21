@@ -1,27 +1,24 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MONTHS, getYearOptions, currentMonthYear } from "@/lib/dateOptions";
 import DepartmentSummaryTable from "@/components/summary/DepartmentSummaryTable";
 import { Button } from "@/components/ui/button";
+import { queryKeys } from "@/lib/queryKeys";
 import { Printer } from "lucide-react";
 
 export default function MonthlySummary() {
   const cur = currentMonthYear();
   const [month, setMonth] = useState(cur.month);
   const [year, setYear] = useState(cur.year);
-  const [transfers, setTransfers] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  const load = useCallback(async () => {
-    const data = await base44.entities.Transfer.list("-date", 2000);
-    setTransfers(data);
-    setLoading(false);
-  }, []);
+  const { data: transfers = [], isLoading } = useQuery({
+    queryKey: queryKeys.transfers,
+    queryFn: () => base44.entities.Transfer.list("-date", 5000),
+  });
 
-  useEffect(() => { load(); }, [load]);
-
-  if (loading) {
+  if (isLoading) {
     return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-slate-300 border-t-slate-800 rounded-full animate-spin" /></div>;
   }
 

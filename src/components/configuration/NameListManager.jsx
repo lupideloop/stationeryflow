@@ -1,35 +1,39 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Trash2, Plus } from "lucide-react";
 
 export default function NameListManager({ entityName, label }) {
-  const [items, setItems] = useState([]);
+  const queryClient = useQueryClient();
   const [newName, setNewName] = useState("");
-  const [loading, setLoading] = useState(true);
+  const queryKey = [entityName];
 
-  const load = useCallback(async () => {
-    const data = await base44.entities[entityName].list("name", 200);
-    setItems(data);
-    setLoading(false);
-  }, [entityName]);
+  const { data: items = [], isLoading } = useQuery({
+    queryKey,
+    queryFn: () => base44.entities[entityName].list("name", 200),
+  });
 
-  useEffect(() => { load(); }, [load]);
+  const addMutation = useMutation({
+    mutationFn: (name) => base44.entities[entityName].create({ name }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey });
+      setNewName("");
+    },
+  });
 
-  const handleAdd = async () => {
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities[entityName].delete(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey }),
+  });
+
+  const handleAdd = () => {
     if (!newName.trim()) return;
-    await base44.entities[entityName].create({ name: newName.trim() });
-    setNewName("");
-    load();
+    addMutation.mutate(newName.trim());
   };
 
-  const handleDelete = async (id) => {
-    await base44.entities[entityName].delete(id);
-    load();
-  };
-
-  if (loading) {
+  if (isLoading) {
     return <div className="text-sm text-muted-foreground">Loading...</div>;
   }
 
@@ -49,7 +53,7 @@ export default function NameListManager({ entityName, label }) {
         {items.map((item) => (
           <div key={item.id} className="flex items-center justify-between px-3 py-2 rounded-md border bg-card">
             <span className="text-sm">{item.name}</span>
-            <Button variant="ghost" size="icon" onClick={() => handleDelete(item.id)}>
+            <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(item.id)}>
               <Trash2 className="w-4 h-4 text-destructive" />
             </Button>
           </div>

@@ -1,27 +1,34 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import TransferForm from "@/components/transfers/TransferForm";
 import BulkTransferForm from "@/components/transfers/BulkTransferForm";
 import TransferTable from "@/components/transfers/TransferTable";
+import Pagination from "@/components/Pagination";
+import { usePagination } from "@/hooks/usePagination";
+import { queryKeys } from "@/lib/queryKeys";
 
 export default function Transfers() {
-  const [items, setItems] = useState([]);
-  const [transfers, setTransfers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  const load = useCallback(async () => {
-    const [i, t] = await Promise.all([
-      base44.entities.StockItem.list("item_id", 1000),
-      base44.entities.Transfer.list("-date", 1000),
-    ]);
-    setItems(i);
-    setTransfers(t);
-    setLoading(false);
-  }, []);
+  const { data: items = [], isLoading: itemsLoading } = useQuery({
+    queryKey: queryKeys.stockItems,
+    queryFn: () => base44.entities.StockItem.list("item_id", 1000),
+  });
+  const { data: transfers = [], isLoading: transfersLoading } = useQuery({
+    queryKey: queryKeys.transfers,
+    queryFn: () => base44.entities.Transfer.list("-date", 5000),
+  });
 
-  useEffect(() => { load(); }, [load]);
+  const loading = itemsLoading || transfersLoading;
+  const { page, totalPages, setPage, paged } = usePagination(transfers, 50);
+
+  const onSaved = () => {
+    queryClient.invalidateQueries({ queryKey: queryKeys.stockItems });
+    queryClient.invalidateQueries({ queryKey: queryKeys.transfers });
+  };
 
   if (loading) {
     return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-slate-300 border-t-slate-800 rounded-full animate-spin" /></div>;
@@ -42,13 +49,14 @@ export default function Transfers() {
                 <TabsTrigger value="single" className="flex-1">Single</TabsTrigger>
                 <TabsTrigger value="bulk" className="flex-1">Bulk</TabsTrigger>
               </TabsList>
-              <TabsContent value="single"><TransferForm items={items} onSaved={load} /></TabsContent>
-              <TabsContent value="bulk"><BulkTransferForm items={items} onSaved={load} /></TabsContent>
+              <TabsContent value="single"><TransferForm items={items} onSaved={onSaved} /></TabsContent>
+              <TabsContent value="bulk"><BulkTransferForm items={items} onSaved={onSaved} /></TabsContent>
             </Tabs>
           </CardContent>
         </Card>
-        <div className="lg:col-span-2">
-          <TransferTable transfers={transfers} />
+        <div className="lg:col-span-2 space-y-3">
+          <TransferTable transfers={paged} />
+          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
         </div>
       </div>
     </div>

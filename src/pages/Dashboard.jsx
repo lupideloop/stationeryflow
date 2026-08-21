@@ -1,28 +1,27 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ConsumptionByItemCard from "@/components/dashboard/ConsumptionByItemCard";
 import ConsumptionByValueChart from "@/components/dashboard/ConsumptionByValueChart";
 import NewItemForm from "@/components/dashboard/NewItemForm";
+import ChartErrorBoundary from "@/components/ChartErrorBoundary";
+import { queryKeys } from "@/lib/queryKeys";
 import { AlertTriangle } from "lucide-react";
 
 export default function Dashboard() {
-  const [items, setItems] = useState([]);
-  const [transfers, setTransfers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  const load = useCallback(async () => {
-    const [i, t] = await Promise.all([
-      base44.entities.StockItem.list("-created_date", 1000),
-      base44.entities.Transfer.list("-date", 2000),
-    ]);
-    setItems(i);
-    setTransfers(t);
-    setLoading(false);
-  }, []);
+  const { data: items = [], isLoading: itemsLoading } = useQuery({
+    queryKey: queryKeys.stockItems,
+    queryFn: () => base44.entities.StockItem.list("item_id", 1000),
+  });
+  const { data: transfers = [], isLoading: transfersLoading } = useQuery({
+    queryKey: queryKeys.transfers,
+    queryFn: () => base44.entities.Transfer.list("-date", 5000),
+  });
 
-  useEffect(() => { load(); }, [load]);
-
+  const loading = itemsLoading || transfersLoading;
   const lowStock = items.filter((i) => i.status === "Low Stock");
 
   if (loading) {
@@ -47,8 +46,12 @@ export default function Dashboard() {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <ConsumptionByItemCard transfers={transfers} items={items} />
-        <ConsumptionByValueChart transfers={transfers} />
+        <ChartErrorBoundary>
+          <ConsumptionByItemCard transfers={transfers} items={items} />
+        </ChartErrorBoundary>
+        <ChartErrorBoundary>
+          <ConsumptionByValueChart transfers={transfers} />
+        </ChartErrorBoundary>
       </div>
 
       <Card className="shadow-sm max-w-xl">
@@ -56,7 +59,7 @@ export default function Dashboard() {
           <CardTitle className="text-base font-semibold">Register New Item</CardTitle>
         </CardHeader>
         <CardContent>
-          <NewItemForm items={items} onCreated={load} />
+          <NewItemForm items={items} onCreated={() => queryClient.invalidateQueries({ queryKey: queryKeys.stockItems })} />
         </CardContent>
       </Card>
     </div>
