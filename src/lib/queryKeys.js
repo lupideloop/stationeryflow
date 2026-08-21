@@ -5,5 +5,6 @@ export const queryKeys = {
   purchases: ["Purchase"],
   transfers: ["Transfer"],
   requisitions: ["Requisition"],
+  departments: ["Department"],
   stockTake: (month, year) => ["StockTake", month, year],
 };

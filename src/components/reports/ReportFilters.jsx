@@ -2,10 +2,9 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DEPARTMENTS } from "@/lib/departments";
 import { CATEGORIES } from "@/lib/categories";
 
-export default function ReportFilters({ startDate, endDate, department, category, item, items = [], onChange }) {
+export default function ReportFilters({ startDate, endDate, department, category, item, items = [], departments = [], onChange }) {
   const filteredItems = category === "all" ? items : items.filter((i) => i.category === category);
   return (
     <div className="flex flex-col gap-3 bg-white border border-slate-200 rounded-lg p-4">
@@ -24,7 +23,7 @@ export default function ReportFilters({ startDate, endDate, department, category
             <SelectTrigger className="w-52"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Departments</SelectItem>
-              {DEPARTMENTS.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}
+              {departments.map((d) => <SelectItem key={d.id} value={d.name}>{d.name}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>

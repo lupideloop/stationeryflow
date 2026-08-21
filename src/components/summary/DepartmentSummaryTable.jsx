@@ -1,17 +1,16 @@
 import React, { useMemo } from "react";
-import { DEPARTMENTS } from "@/lib/departments";
 
-export default function DepartmentSummaryTable({ transfers, month, year }) {
+export default function DepartmentSummaryTable({ transfers, month, year, departments = [] }) {
   const rows = useMemo(() => {
     const key = `${year}-${month}`;
     const filtered = transfers.filter((t) => t.month_year === key);
-    return DEPARTMENTS.map((dept) => {
-      const deptTransfers = filtered.filter((t) => t.department === dept);
+    return departments.map((d) => {
+      const deptTransfers = filtered.filter((t) => t.department === d.name);
       const totalCost = deptTransfers.reduce((sum, t) => sum + (Number(t.total_cost) || 0), 0);
       const totalQty = deptTransfers.reduce((sum, t) => sum + (Number(t.quantity_issued) || 0), 0);
-      return { department: dept, totalQty, totalCost };
+      return { department: d.name, totalQty, totalCost };
     });
-  }, [transfers, month, year]);
+  }, [transfers, month, year, departments]);
 
   const grandTotal = rows.reduce((sum, r) => sum + r.totalCost, 0);
 

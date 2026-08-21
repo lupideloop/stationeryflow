@@ -4,12 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DEPARTMENTS } from "@/lib/departments";
 import { computeDerivedFields } from "@/lib/stockCalculations";
 import { toDisplayDate } from "@/lib/dateFormat";
 import { useToast } from "@/components/ui/use-toast";
 
-export default function TransferForm({ items, onSaved }) {
+export default function TransferForm({ items, departments = [], onSaved }) {
   const { toast } = useToast();
   const [form, setForm] = useState({ date: new Date().toISOString().slice(0, 10), item_id: "", quantity_issued: "", department: "" });
   const [saving, setSaving] = useState(false);
@@ -75,7 +74,7 @@ export default function TransferForm({ items, onSaved }) {
           <Label className="text-xs">Department</Label>
           <Select value={form.department} onValueChange={(v) => setForm((f) => ({ ...f, department: v }))}>
             <SelectTrigger><SelectValue placeholder="Select department" /></SelectTrigger>
-            <SelectContent>{DEPARTMENTS.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
+            <SelectContent>{departments.map((d) => <SelectItem key={d.id} value={d.name}>{d.name}</SelectItem>)}</SelectContent>
           </Select>
         </div>
       </div>

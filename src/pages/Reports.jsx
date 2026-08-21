@@ -46,8 +46,12 @@ export default function Reports() {
     queryKey: queryKeys.stockItems,
     queryFn: () => base44.entities.StockItem.list("item_id", 1000),
   });
+  const { data: departments = [], isLoading: departmentsLoading } = useQuery({
+    queryKey: queryKeys.departments,
+    queryFn: () => base44.entities.Department.list("name", 200),
+  });
 
-  const loading = transfersLoading || itemsLoading;
+  const loading = transfersLoading || itemsLoading || departmentsLoading;
 
   const handleFilterChange = (patch) => setFilters((prev) => ({ ...prev, ...patch }));
 
@@ -86,6 +90,7 @@ export default function Reports() {
         category={filters.category}
         item={filters.item}
         items={stockItems}
+        departments={departments}
         onChange={handleFilterChange}
       />
 
@@ -101,7 +106,7 @@ export default function Reports() {
         <TabsContent value="department">
           <Card>
             <CardHeader><CardTitle className="text-base">Consumption by Department</CardTitle></CardHeader>
-            <CardContent><DepartmentConsumptionReport transfers={filteredTransfers} /></CardContent>
+            <CardContent><DepartmentConsumptionReport transfers={filteredTransfers} departments={departments} /></CardContent>
           </Card>
         </TabsContent>
 

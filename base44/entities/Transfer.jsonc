@@ -17,17 +17,7 @@
     },
     "department": {
       "type": "string",
-      "enum": [
-        "Exec Offices + Marketing",
-        "FEC",
-        "Bay Radio",
-        "Accounts Dept",
-        "Cynergi",
-        "CarPark",
-        "Cinema",
-        "TEN Ltd",
-        "Other"
-      ]
+      "description": "Department name \u2014 matches a Department entity record for this account"
     },
     "unit_price": {
       "type": "number"

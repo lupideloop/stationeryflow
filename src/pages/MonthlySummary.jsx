@@ -13,10 +13,16 @@ export default function MonthlySummary() {
   const [month, setMonth] = useState(cur.month);
   const [year, setYear] = useState(cur.year);
 
-  const { data: transfers = [], isLoading } = useQuery({
+  const { data: transfers = [], isLoading: transfersLoading } = useQuery({
     queryKey: queryKeys.transfers,
     queryFn: () => base44.entities.Transfer.list("-date", 5000),
   });
+  const { data: departments = [], isLoading: departmentsLoading } = useQuery({
+    queryKey: queryKeys.departments,
+    queryFn: () => base44.entities.Department.list("name", 200),
+  });
+
+  const isLoading = transfersLoading || departmentsLoading;
 
   if (isLoading) {
     return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-slate-300 border-t-slate-800 rounded-full animate-spin" /></div>;
@@ -44,7 +50,7 @@ export default function MonthlySummary() {
           </Button>
         </div>
       </div>
-      <DepartmentSummaryTable transfers={transfers} month={month} year={year} />
+      <DepartmentSummaryTable transfers={transfers} month={month} year={year} departments={departments} />
     </div>
   );
 }

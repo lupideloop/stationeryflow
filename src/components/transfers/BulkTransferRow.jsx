@@ -3,9 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import { DEPARTMENTS } from "@/lib/departments";
 
-export default function BulkTransferRow({ row, items, onChange, onRemove, canRemove }) {
+export default function BulkTransferRow({ row, items, departments = [], onChange, onRemove, canRemove }) {
   return (
     <div className="border border-slate-200 rounded-lg p-3 space-y-2 relative">
       {canRemove && (
@@ -24,7 +23,7 @@ export default function BulkTransferRow({ row, items, onChange, onRemove, canRem
         <Input type="number" placeholder="Qty" value={row.quantity_issued} onChange={(e) => onChange("quantity_issued", e.target.value)} />
         <Select value={row.department} onValueChange={(v) => onChange("department", v)}>
           <SelectTrigger><SelectValue placeholder="Department" /></SelectTrigger>
-          <SelectContent>{DEPARTMENTS.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
+          <SelectContent>{departments.map((d) => <SelectItem key={d.id} value={d.name}>{d.name}</SelectItem>)}</SelectContent>
         </Select>
       </div>
     </div>

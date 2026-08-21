@@ -1,15 +1,14 @@
 import React, { useMemo } from "react";
-import { DEPARTMENTS } from "@/lib/departments";
 
-export default function DepartmentConsumptionReport({ transfers }) {
+export default function DepartmentConsumptionReport({ transfers, departments = [] }) {
   const rows = useMemo(() => {
-    return DEPARTMENTS.map((dept) => {
-      const deptTransfers = transfers.filter((t) => t.department === dept);
+    return departments.map((d) => {
+      const deptTransfers = transfers.filter((t) => t.department === d.name);
       const totalQty = deptTransfers.reduce((sum, t) => sum + (Number(t.quantity_issued) || 0), 0);
       const totalCost = deptTransfers.reduce((sum, t) => sum + (Number(t.total_cost) || 0), 0);
-      return { department: dept, totalQty, totalCost };
+      return { department: d.name, totalQty, totalCost };
     }).filter((r) => r.totalQty > 0 || r.totalCost > 0);
-  }, [transfers]);
+  }, [transfers, departments]);
 
   const grandTotal = rows.reduce((sum, r) => sum + r.totalCost, 0);
 

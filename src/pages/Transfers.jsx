@@ -21,8 +21,12 @@ export default function Transfers() {
     queryKey: queryKeys.transfers,
     queryFn: () => base44.entities.Transfer.list("-date", 5000),
   });
+  const { data: departments = [], isLoading: departmentsLoading } = useQuery({
+    queryKey: queryKeys.departments,
+    queryFn: () => base44.entities.Department.list("name", 200),
+  });
 
-  const loading = itemsLoading || transfersLoading;
+  const loading = itemsLoading || transfersLoading || departmentsLoading;
   const { page, totalPages, setPage, paged } = usePagination(transfers, 50);
 
   const onSaved = () => {
@@ -49,8 +53,8 @@ export default function Transfers() {
                 <TabsTrigger value="single" className="flex-1">Single</TabsTrigger>
                 <TabsTrigger value="bulk" className="flex-1">Bulk</TabsTrigger>
               </TabsList>
-              <TabsContent value="single"><TransferForm items={items} onSaved={onSaved} /></TabsContent>
-              <TabsContent value="bulk"><BulkTransferForm items={items} onSaved={onSaved} /></TabsContent>
+              <TabsContent value="single"><TransferForm items={items} departments={departments} onSaved={onSaved} /></TabsContent>
+              <TabsContent value="bulk"><BulkTransferForm items={items} departments={departments} onSaved={onSaved} /></TabsContent>
             </Tabs>
           </CardContent>
         </Card>

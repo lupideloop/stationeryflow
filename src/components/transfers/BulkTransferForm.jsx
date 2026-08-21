@@ -9,7 +9,7 @@ import BulkTransferRow from "./BulkTransferRow";
 
 const emptyRow = () => ({ date: new Date().toISOString().slice(0, 10), item_id: "", quantity_issued: "", department: "" });
 
-export default function BulkTransferForm({ items, onSaved }) {
+export default function BulkTransferForm({ items, departments = [], onSaved }) {
   const { toast } = useToast();
   const [rows, setRows] = useState([emptyRow()]);
   const [saving, setSaving] = useState(false);
@@ -75,6 +75,7 @@ export default function BulkTransferForm({ items, onSaved }) {
             key={index}
             row={row}
             items={items}
+            departments={departments}
             onChange={(field, value) => updateRow(index, field, value)}
             onRemove={() => removeRow(index)}
             canRemove={rows.length > 1}
