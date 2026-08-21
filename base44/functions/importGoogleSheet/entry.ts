@@ -19,6 +19,37 @@ function toNumber(v) {
   return isNaN(n) ? 0 : n;
 }
 
+// Normalizes a spreadsheet date cell to "DD/MM/YYYY" so it matches the format
+// used everywhere else in the app (manual entry, report date filtering).
+function normalizeDate(raw) {
+  const value = String(raw || "").trim();
+  if (!value) return value;
+
+  // Already "D/M/YYYY" or "DD/MM/YYYY"
+  const slashMatch = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (slashMatch) {
+    const [, d, m, y] = slashMatch;
+    return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
+  }
+
+  // ISO "YYYY-MM-DD"
+  const isoMatch = value.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (isoMatch) {
+    const [, y, m, d] = isoMatch;
+    return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
+  }
+
+  // Fallback: let the Date parser have a go (e.g. "August 21, 2026")
+  const parsed = new Date(value);
+  if (!isNaN(parsed.getTime())) {
+    const d = String(parsed.getDate()).padStart(2, "0");
+    const m = String(parsed.getMonth() + 1).padStart(2, "0");
+    return `${d}/${m}/${parsed.getFullYear()}`;
+  }
+
+  return value;
+}
+
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
@@ -66,7 +97,7 @@ export default async function(req) {
     const purchaseRows = await fetchTab(spreadsheetId, accessToken, 'Purchase Log');
     if (purchaseRows) {
       const purchases = purchaseRows.filter((r) => r[1]).map((row) => ({
-        date: String(row[0] || ''),
+        date: normalizeDate(row[0]),
         item_id: String(row[1] || ''),
         details: String(row[2] || ''),
         quantity_purchased: toNumber(row[3]),
@@ -82,7 +113,7 @@ export default async function(req) {
     const transferRows = await fetchTab(spreadsheetId, accessToken, 'Transfer Log');
     if (transferRows) {
       const transfers = transferRows.filter((r) => r[1]).map((row) => ({
-        date: String(row[0] || ''),
+        date: normalizeDate(row[0]),
         item_id: String(row[1] || ''),
         details: String(row[2] || ''),
         quantity_issued: toNumber(row[3]),
