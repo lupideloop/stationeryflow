@@ -6,6 +6,7 @@ import StockItemTable from "@/components/stock/StockItemTable";
 import Pagination from "@/components/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagination } from "@/hooks/usePagination";
+import { useSort } from "@/hooks/useSort";
 import { queryKeys } from "@/lib/queryKeys";
 import { Search } from "lucide-react";
 
@@ -28,7 +29,8 @@ export default function MasterStock() {
     );
   }, [items, debouncedSearch]);
 
-  const { page, totalPages, setPage, paged } = usePagination(filtered, 50);
+  const { sorted, sortKey, sortDir, toggleSort } = useSort(filtered);
+  const { page, totalPages, setPage, paged } = usePagination(sorted, 50);
 
   const totalStockValue = items.reduce((sum, i) => sum + (Number(i.total_value) || 0), 0);
 
@@ -54,7 +56,13 @@ export default function MasterStock() {
           </div>
         </div>
       </div>
-      <StockItemTable items={paged} onChanged={() => queryClient.invalidateQueries({ queryKey: queryKeys.stockItems })} />
+      <StockItemTable
+        items={paged}
+        onChanged={() => queryClient.invalidateQueries({ queryKey: queryKeys.stockItems })}
+        sortKey={sortKey}
+        sortDir={sortDir}
+        onSort={toggleSort}
+      />
       <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );

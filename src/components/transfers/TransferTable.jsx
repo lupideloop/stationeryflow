@@ -1,18 +1,21 @@
 import React from "react";
+import SortableHeader from "@/components/SortableHeader";
 
-export default function TransferTable({ transfers }) {
+export default function TransferTable({ transfers, sortKey, sortDir, onSort }) {
+  const headerProps = { sortKey, sortDir, onSort };
+
   return (
     <div className="overflow-x-auto rounded-lg border border-slate-200">
       <table className="w-full text-sm">
         <thead className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide">
           <tr>
-            <th className="text-left px-4 py-3">Date</th>
-            <th className="text-left px-4 py-3">Item ID</th>
-            <th className="text-left px-4 py-3">Details</th>
-            <th className="text-right px-4 py-3">Qty Issued</th>
-            <th className="text-left px-4 py-3">Department</th>
-            <th className="text-right px-4 py-3">Unit Price</th>
-            <th className="text-right px-4 py-3">Total Cost</th>
+            <SortableHeader label="Date" sortKeyName="date" {...headerProps} />
+            <SortableHeader label="Item ID" sortKeyName="item_id" {...headerProps} />
+            <SortableHeader label="Details" sortKeyName="details" {...headerProps} />
+            <SortableHeader label="Qty Issued" sortKeyName="quantity_issued" align="right" {...headerProps} />
+            <SortableHeader label="Department" sortKeyName="department" {...headerProps} />
+            <SortableHeader label="Unit Price" sortKeyName="unit_price" align="right" {...headerProps} />
+            <SortableHeader label="Total Cost" sortKeyName="total_cost" align="right" {...headerProps} />
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">

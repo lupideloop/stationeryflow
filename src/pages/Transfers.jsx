@@ -8,6 +8,7 @@ import BulkTransferForm from "@/components/transfers/BulkTransferForm";
 import TransferTable from "@/components/transfers/TransferTable";
 import Pagination from "@/components/Pagination";
 import { usePagination } from "@/hooks/usePagination";
+import { useSort } from "@/hooks/useSort";
 import { queryKeys } from "@/lib/queryKeys";
 
 export default function Transfers() {
@@ -27,7 +28,8 @@ export default function Transfers() {
   });
 
   const loading = itemsLoading || transfersLoading || departmentsLoading;
-  const { page, totalPages, setPage, paged } = usePagination(transfers, 50);
+  const { sorted, sortKey, sortDir, toggleSort } = useSort(transfers, "date", "desc");
+  const { page, totalPages, setPage, paged } = usePagination(sorted, 50);
 
   const onSaved = () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.stockItems });
@@ -59,7 +61,7 @@ export default function Transfers() {
           </CardContent>
         </Card>
         <div className="lg:col-span-2 space-y-3">
-          <TransferTable transfers={paged} />
+          <TransferTable transfers={paged} sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} />
           <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
         </div>
       </div>

@@ -2,26 +2,28 @@ import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
+import SortableHeader from "@/components/SortableHeader";
 import StockItemFormDialog from "./StockItemFormDialog";
 
-export default function StockItemTable({ items, onChanged }) {
+export default function StockItemTable({ items, onChanged, sortKey, sortDir, onSort }) {
   const [editing, setEditing] = useState(null);
+  const headerProps = { sortKey, sortDir, onSort };
 
   return (
     <div className="overflow-x-auto rounded-lg border border-slate-200">
       <table className="w-full text-sm">
         <thead className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide">
           <tr>
-            <th className="text-left px-4 py-3">Item ID</th>
-            <th className="text-left px-4 py-3">Details</th>
-            <th className="text-left px-4 py-3">Category</th>
-            <th className="text-right px-4 py-3">Qty In</th>
-            <th className="text-right px-4 py-3">Qty Out</th>
-            <th className="text-right px-4 py-3">Stock Level</th>
-            <th className="text-right px-4 py-3">Unit Cost</th>
-            <th className="text-right px-4 py-3">Total Value</th>
-            <th className="text-right px-4 py-3">Min Level</th>
-            <th className="text-center px-4 py-3">Status</th>
+            <SortableHeader label="Item ID" sortKeyName="item_id" {...headerProps} />
+            <SortableHeader label="Details" sortKeyName="details" {...headerProps} />
+            <SortableHeader label="Category" sortKeyName="category" {...headerProps} />
+            <SortableHeader label="Qty In" sortKeyName="qty_in" align="right" {...headerProps} />
+            <SortableHeader label="Qty Out" sortKeyName="qty_out" align="right" {...headerProps} />
+            <SortableHeader label="Stock Level" sortKeyName="stock_level" align="right" {...headerProps} />
+            <SortableHeader label="Unit Cost" sortKeyName="unit_cost" align="right" {...headerProps} />
+            <SortableHeader label="Total Value" sortKeyName="total_value" align="right" {...headerProps} />
+            <SortableHeader label="Min Level" sortKeyName="minimum_stock_level" align="right" {...headerProps} />
+            <SortableHeader label="Status" sortKeyName="status" align="center" {...headerProps} />
             <th className="px-4 py-3"></th>
           </tr>
         </thead>

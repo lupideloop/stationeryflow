@@ -1,17 +1,20 @@
 import React from "react";
+import SortableHeader from "@/components/SortableHeader";
 
-export default function PurchaseTable({ purchases }) {
+export default function PurchaseTable({ purchases, sortKey, sortDir, onSort }) {
+  const headerProps = { sortKey, sortDir, onSort };
+
   return (
     <div className="overflow-x-auto rounded-lg border border-slate-200">
       <table className="w-full text-sm">
         <thead className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide">
           <tr>
-            <th className="text-left px-4 py-3">Date</th>
-            <th className="text-left px-4 py-3">Item ID</th>
-            <th className="text-left px-4 py-3">Details</th>
-            <th className="text-right px-4 py-3">Quantity</th>
-            <th className="text-right px-4 py-3">Unit Price</th>
-            <th className="text-right px-4 py-3">Line Total</th>
+            <SortableHeader label="Date" sortKeyName="date" {...headerProps} />
+            <SortableHeader label="Item ID" sortKeyName="item_id" {...headerProps} />
+            <SortableHeader label="Details" sortKeyName="details" {...headerProps} />
+            <SortableHeader label="Quantity" sortKeyName="quantity_purchased" align="right" {...headerProps} />
+            <SortableHeader label="Unit Price" sortKeyName="unit_price" align="right" {...headerProps} />
+            <SortableHeader label="Line Total" sortKeyName="line_total" align="right" {...headerProps} />
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">

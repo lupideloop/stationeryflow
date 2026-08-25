@@ -8,6 +8,7 @@ import BulkPurchaseForm from "@/components/purchases/BulkPurchaseForm";
 import PurchaseTable from "@/components/purchases/PurchaseTable";
 import Pagination from "@/components/Pagination";
 import { usePagination } from "@/hooks/usePagination";
+import { useSort } from "@/hooks/useSort";
 import { queryKeys } from "@/lib/queryKeys";
 
 export default function Purchases() {
@@ -23,7 +24,8 @@ export default function Purchases() {
   });
 
   const loading = itemsLoading || purchasesLoading;
-  const { page, totalPages, setPage, paged } = usePagination(purchases, 50);
+  const { sorted, sortKey, sortDir, toggleSort } = useSort(purchases, "date", "desc");
+  const { page, totalPages, setPage, paged } = usePagination(sorted, 50);
 
   const onSaved = () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.stockItems });
@@ -55,7 +57,7 @@ export default function Purchases() {
           </CardContent>
         </Card>
         <div className="lg:col-span-2 space-y-3">
-          <PurchaseTable purchases={paged} />
+          <PurchaseTable purchases={paged} sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} />
           <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
         </div>
       </div>
