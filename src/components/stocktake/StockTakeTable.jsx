@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 
-export default function StockTakeTable({ entries, onChanged }) {
+export default function StockTakeTable({ entries, onChanged, allChecked, onToggleAll }) {
   const handleFoundChange = async (entry, value) => {
     await base44.entities.StockTake.update(entry.id, { stock_found: Number(value) || 0 });
     onChanged?.();
@@ -26,7 +26,16 @@ export default function StockTakeTable({ entries, onChanged }) {
             <th className="text-right px-4 py-3">Stock Found</th>
             <th className="text-right px-4 py-3">Variance</th>
             <th className="text-left px-4 py-3">Last Snapshot</th>
-            <th className="text-center px-4 py-3">Checked</th>
+            <th className="text-center px-4 py-3">
+              <div className="flex items-center justify-center gap-1.5">
+                <span>Checked</span>
+                <Checkbox
+                  checked={allChecked}
+                  onCheckedChange={(v) => onToggleAll?.(!!v)}
+                  title={allChecked ? "Deselect all" : "Select all"}
+                />
+              </div>
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">

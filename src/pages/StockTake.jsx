@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MONTHS, getYearOptions, currentMonthYear } from "@/lib/dateOptions";
 import StockTakeTable from "@/components/stocktake/StockTakeTable";
+import StockTakePrintView from "@/components/stocktake/StockTakePrintView";
 import Pagination from "@/components/Pagination";
 import { usePagination } from "@/hooks/usePagination";
 import { queryKeys } from "@/lib/queryKeys";
 import { useToast } from "@/components/ui/use-toast";
-import { ClipboardCheck } from "lucide-react";
+import { ClipboardCheck, Printer } from "lucide-react";
 
 export default function StockTakePage() {
   const { toast } = useToast();
@@ -54,11 +55,19 @@ export default function StockTakePage() {
     },
   });
 
+  const toggleAllMutation = useMutation({
+    mutationFn: async (checked) => {
+      await base44.entities.StockTake.updateMany({ month_year: `${year}-${month}` }, { $set: { checked } });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: stockTakeKey }),
+  });
+
+  const allChecked = entries.length > 0 && entries.every((e) => e.checked);
   const { page, totalPages, setPage, paged } = usePagination(entries, 50);
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="flex items-center justify-between flex-wrap gap-3 print:hidden">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">Stock Take</h1>
           <p className="text-sm text-slate-500 mt-1">Audit physical stock against recorded levels.</p>
@@ -72,17 +81,28 @@ export default function StockTakePage() {
             <SelectTrigger className="w-24"><SelectValue /></SelectTrigger>
             <SelectContent>{getYearOptions().map((y) => <SelectItem key={y} value={String(y)}>{y}</SelectItem>)}</SelectContent>
           </Select>
+          <Button variant="outline" onClick={() => window.print()} disabled={entries.length === 0} className="gap-2">
+            <Printer className="w-4 h-4" /> Print
+          </Button>
           <Button onClick={() => startMutation.mutate()} disabled={startMutation.isPending} className="gap-2">
             <ClipboardCheck className="w-4 h-4" /> {startMutation.isPending ? "Starting..." : "Start Monthly Stock Take"}
           </Button>
         </div>
       </div>
       {isLoading ? (
-        <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-slate-300 border-t-slate-800 rounded-full animate-spin" /></div>
+        <div className="flex items-center justify-center h-64 print:hidden"><div className="w-6 h-6 border-2 border-slate-300 border-t-slate-800 rounded-full animate-spin" /></div>
       ) : (
         <>
-          <StockTakeTable entries={paged} onChanged={() => queryClient.invalidateQueries({ queryKey: stockTakeKey })} />
-          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+          <div className="space-y-4 print:hidden">
+            <StockTakeTable
+              entries={paged}
+              onChanged={() => queryClient.invalidateQueries({ queryKey: stockTakeKey })}
+              allChecked={allChecked}
+              onToggleAll={(checked) => toggleAllMutation.mutate(checked)}
+            />
+            <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+          </div>
+          <StockTakePrintView entries={entries} month={month} year={year} />
         </>
       )}
     </div>
