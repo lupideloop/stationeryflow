@@ -1,5 +1,15 @@
 import { useState, useMemo } from "react";
 
+// Converts a "DD/MM/YYYY" string to a sortable "YYYY-MM-DD" string; returns
+// the original value unchanged if it doesn't match that format.
+function toSortableDate(value) {
+  if (typeof value !== "string") return value;
+  const match = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!match) return value;
+  const [, day, month, year] = match;
+  return `${year}-${month}-${day}`;
+}
+
 export function useSort(data, initialKey = null, initialDir = "asc") {
   const [sortKey, setSortKey] = useState(initialKey);
   const [sortDir, setSortDir] = useState(initialDir);
@@ -16,8 +26,8 @@ export function useSort(data, initialKey = null, initialDir = "asc") {
   const sorted = useMemo(() => {
     if (!sortKey) return data;
     return [...data].sort((a, b) => {
-      const av = a[sortKey];
-      const bv = b[sortKey];
+      const av = toSortableDate(a[sortKey]);
+      const bv = toSortableDate(b[sortKey]);
       if (av == null && bv == null) return 0;
       if (av == null) return sortDir === "asc" ? -1 : 1;
       if (bv == null) return sortDir === "asc" ? 1 : -1;
