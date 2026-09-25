@@ -5,9 +5,9 @@ import MobileNav from "./MobileNav";
 
 export default function AppLayout() {
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex h-screen bg-background">
       <Sidebar />
-      <div className="flex-1 min-w-0 flex flex-col">
+      <div className="flex-1 min-w-0 flex flex-col overflow-y-auto">
         <MobileNav />
         <main className="flex-1 min-w-0 p-5 md:p-8">
           <Outlet />
